@@ -27,3 +27,5 @@ The program has to be compiled using -std=c++11 and was written on an Ubuntu 16.
 * _header.h_ contains all the prototypes of functions and structures used in the program.
 * _s_parameters.txt_ is a template for the parameters input file.
 * _sauvegarde.sh_ is a shell script called upon in the C++ program to manage back-ups during simulations. It should always be in the same folder as the executable file.
+
+If readers need any explanation regarding the programs and notebooks presented in this repository, they can e-mail me at: *thomas.lesaffre@univ-lille.fr*
