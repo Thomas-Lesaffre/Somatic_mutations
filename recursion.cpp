@@ -62,7 +62,7 @@ result recursion(int Nv, int Ngv, int step_mesv, double av, double sigv, double 
 	double twoL = 2*Lv; 
 	
 	int i, j, k, nb, g, g_s, m, k1, k2, n_par1, n_par2, n_sec1, n_sec2, k_first, k_last;
-	double S, max_fec, max_fec_within, mc, n_mc, n0, n1, n2, r0, r1, r2, wHet, wHom, U, del_01, del_02, del_12, prev_fec, Nmut, mes_U, new_u1, new_u2, age_ind, age_mut, age_sec, tmc;
+	double S, max_fec, max_fec_within, mc, n_mc, n0, n1, n2, r0, r1, r2, wHet, wHom, U, del_01, del_02, del_12, prev_fec, Nmut, mes_U, new_u1, new_u2, age_ind, age_mut, age_sec, tmc, meio_U, mito_U;
 	
 	mut tmp_mut, tmp_mut2;
 	
@@ -195,8 +195,9 @@ result recursion(int Nv, int Ngv, int step_mesv, double av, double sigv, double 
 			par[nb] = pop[nb];
 			par[nb+1] = pop[nb+1];
 			
-			U = (par[nb].u + par[nb+1].u)/2; // Individual [i] mutation rate.
-			
+			meio_U = (par[nb].u + par[nb+1].u)/2; // Individual [i] meiotic mutation rate.
+			mito_U = gam((par[nb].u + par[nb+1].u)/2, g_gav, g_gbv, g_tv); // Individual [i] mitotic mutation rate.
+				
 			for(j=1; j<=par[nb].ind_age; j++) // For each section (from 1 to .ind_age), we create a subset vector of the .sel vectors, with the mutations present in said section, and calculate fitness.
 			{
 				// Clear temporary vectors.
@@ -232,7 +233,7 @@ result recursion(int Nv, int Ngv, int step_mesv, double av, double sigv, double 
 				
 				// Using the chromosomes and the individual's mutation rate, calculate fitness,
 				
-				v_fec.push_back(cost(gam(U, g_gav, g_gbv, g_tv),cv,tv)*fitness_vec(tmp_sel1, tmp_sel2, wHet, wHom)); // push_back in the v_fec vector.
+				v_fec.push_back(cost(meio_U,cv,tv)*fitness_vec(tmp_sel1, tmp_sel2, wHet, wHom)); // push_back in the v_fec vector.
 					// The 'cost()' function calculates the cost of replication fidelity.
 					// The 'gam()' function calculates the meiotic mutation rate using the somatic mutation rate.
 					// The 'fitness_vec()' function calculates the fitness effect of deleterious mutations using the temporary vectors constructed above.
@@ -252,7 +253,7 @@ result recursion(int Nv, int Ngv, int step_mesv, double av, double sigv, double 
 			if(rnd.rand() < S) // If the individual survives.
 			{
 			
-				U = (pop[nb].u + pop[nb+1].u)/2; // Determine its mutation rate.
+				mito_U = gam((par[nb].u + par[nb+1].u)/2, g_gav, g_gbv, g_tv); // Individual [i] mitotic mutation rate.
 				
 				vec_death.push_back(0); // Indicate that it survived.
 				
@@ -265,7 +266,7 @@ result recursion(int Nv, int Ngv, int step_mesv, double av, double sigv, double 
 
 				// Somatic mutations occur and are sorted.
 								
-				Nmut=poisdev(U);
+				Nmut=poisdev(mito_U);
 				for(m=0; m<Nmut; m++)
 				{
 					tmp_mut.pos = twoL*rnd.rand();
@@ -276,7 +277,7 @@ result recursion(int Nv, int Ngv, int step_mesv, double av, double sigv, double 
 					sort(pop[nb].sel.begin(),pop[nb].sel.end(), [](const mut & mut1, const mut & mut2) { return ( mut1.pos < mut2.pos ); });	
 				}
 							
-				Nmut=poisdev(U);
+				Nmut=poisdev(mito_U);
 				for(m=0; m<Nmut; m++)
 				{
 					tmp_mut.pos = twoL*rnd.rand();
@@ -509,11 +510,11 @@ result recursion(int Nv, int Ngv, int step_mesv, double av, double sigv, double 
 				new_u1 = par[2*n_par1].u;
 				new_u2 = par[2*n_par1 + 1].u;
 				
-				U = (new_u1 + new_u2)/2; // Retrieve mutation rate.
+				meio_U = (new_u1 + new_u2)/2; // Retrieve mutation rate.
 				
 				if(g > trigger_uv) // If mutation at the modifier is triggered,
 				{
-					if(rnd.rand() < gam(U, g_gav, g_gbv, g_tv)*uv)
+					if(rnd.rand() < uv)
 					{
 						new_u1 = new_u1 + step_uv*gaussdev();
 
@@ -523,7 +524,7 @@ result recursion(int Nv, int Ngv, int step_mesv, double av, double sigv, double 
 						}
 					}
 					
-					if(rnd.rand() < gam(U, g_gav, g_gbv, g_tv)*uv)
+					if(rnd.rand() < uv)
 					{
 						new_u2 = new_u2 + step_uv*gaussdev();
 
@@ -536,9 +537,9 @@ result recursion(int Nv, int Ngv, int step_mesv, double av, double sigv, double 
 				
 				// Mutations at selected loci.
 				
-				U = (new_u1 + new_u2)/2; // Retrieve mutation rate.
+				meio_U = (new_u1 + new_u2)/2; // Retrieve mutation rate.
 						
-				Nmut=int(poisdev(gam(U, g_gav, g_gbv, g_tv))); // Sample the number of mutations.	
+				Nmut=int(poisdev(meio_U)); // Sample the number of mutations.	
 				for(m=0; m<Nmut; m++)
 				{
 					sel_pos_par1_1.push_back(twoL*rnd.rand());
@@ -549,7 +550,7 @@ result recursion(int Nv, int Ngv, int step_mesv, double av, double sigv, double 
 					sort(sel_pos_par1_1.begin(), sel_pos_par1_1.end());				
 				}
 								
-				Nmut=int(poisdev(gam(U, g_gav, g_gbv, g_tv)));		
+				Nmut=int(poisdev(meio_U));		
 				for(m=0; m<Nmut; m++)
 				{
 					sel_pos_par1_2.push_back(twoL*rnd.rand());
@@ -583,11 +584,11 @@ result recursion(int Nv, int Ngv, int step_mesv, double av, double sigv, double 
 				new_u1 = par[2*n_par2].u;
 				new_u2 = par[2*n_par2 + 1].u;
 				
-				U = (new_u1 + new_u2)/2; // Retrieve mutation rate.
+				meio_U = (new_u1 + new_u2)/2; // Retrieve mutation rate.
 				
 				if(g > trigger_uv) // If mutation at the modifier is triggered,
 				{
-					if(rnd.rand() < gam(U, g_gav, g_gbv, g_tv)*uv)
+					if(rnd.rand() < uv)
 					{
 						new_u1 = new_u1 + step_uv*gaussdev();
 
@@ -597,7 +598,7 @@ result recursion(int Nv, int Ngv, int step_mesv, double av, double sigv, double 
 						}
 					}
 					
-					if(rnd.rand() < gam(U, g_gav, g_gbv, g_tv)*uv)
+					if(rnd.rand() < uv)
 					{
 						new_u2 = new_u2 + step_uv*gaussdev();
 
@@ -610,9 +611,9 @@ result recursion(int Nv, int Ngv, int step_mesv, double av, double sigv, double 
 				
 				// Mutations at selected loci.
 				
-				U = (new_u1 + new_u2)/2;
+				meio_U = (new_u1 + new_u2)/2;
 						
-				Nmut=int(poisdev(gam(U, g_gav, g_gbv, g_tv)));		
+				Nmut=int(poisdev(meio_U));		
 				for(m=0; m<Nmut; m++)
 				{
 					sel_pos_par2_1.push_back(twoL*rnd.rand());
@@ -623,7 +624,7 @@ result recursion(int Nv, int Ngv, int step_mesv, double av, double sigv, double 
 					sort(sel_pos_par2_1.begin(), sel_pos_par2_1.end());	
 				}
 				
-				Nmut=int(poisdev(gam(U, g_gav, g_gbv, g_tv)));		
+				Nmut=int(poisdev(meio_U));		
 				for(m=0; m<Nmut; m++)
 				{
 					sel_pos_par2_2.push_back(twoL*rnd.rand());
@@ -663,13 +664,13 @@ result recursion(int Nv, int Ngv, int step_mesv, double av, double sigv, double 
 				
 				// Somatic mutation rate to reach maturity
 				
-				U = (pop[nb].u + pop[nb+1].u)/2; // Determine its mutation rate.
+				mito_U = gam((pop[nb].u + pop[nb+1].u)/2, g_gav, g_gbv, g_tv); // Determine its mutation rate.
 				
 				tmp_mut.age = pop[nb].ind_age;
 
 				// Somatic mutations occur and are sorted.
 								
-				Nmut=poisdev(U);
+				Nmut=poisdev(mito_U);
 				for(m=0; m<Nmut; m++)
 				{
 					tmp_mut.pos = twoL*rnd.rand();
@@ -681,7 +682,7 @@ result recursion(int Nv, int Ngv, int step_mesv, double av, double sigv, double 
 					sort(pop[nb].sel.begin(),pop[nb].sel.end(), [](const mut & mut1, const mut & mut2) { return ( mut1.pos < mut2.pos ); });
 				}
 								
-				Nmut=poisdev(U);
+				Nmut=poisdev(mito_U);
 				for(m=0; m<Nmut; m++)
 				{
 					tmp_mut.pos = twoL*rnd.rand();
