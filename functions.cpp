@@ -309,7 +309,7 @@ double cost(double U, double c, double t)
 	return f;
 }
 
-// Meiotic mut. rate: various types
+// Somatic mut. rate: various types
 	// Type 1: Linear function.
 	// Type 2: Affine function.
 	// Type 3: Exponential function.
