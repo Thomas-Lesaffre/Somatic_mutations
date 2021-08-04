@@ -1,7 +1,7 @@
 # Population-level consequences of inheritable somatic mutations and the evolution of mutation rates in plants
 
 This repository contains the simulation program used in the study "Population-level consequences of inheritable somatic mutations 
-and the evolution of mutation rates in plants", currently under screening to be published on BioRXiv.
+and the evolution of mutation rates in plants", accepted for publication in the _Proceedings of the Royal Society B: Biological Science_.
 
 _Abstract_
 
@@ -28,4 +28,37 @@ The program has to be compiled using -std=c++11 and was written on an Ubuntu 16.
 * _s_parameters.txt_ is a template for the parameters input file.
 * _sauvegarde.sh_ is a shell script called upon in the C++ program to manage back-ups during simulations. It should always be in the same folder as the executable file.
 
-If readers need any explanation regarding the programs and notebooks presented in this repository, they can e-mail me at: *thomas.lesaffre@univ-lille.fr*
+In addition, the raw output of the simulation program which was used to produce the results presented in the main text are given in the compressed folder _data.tar.gz_ .
+
+_Compiling the program_
+
+The program was compiled using the following command: `g++ -static -std=c++11 -o somatic *.cpp *.h` 
+
+_Launching a simulation_
+
+Once the program is compiled, launching a simulation requires that the _sauvegarde.sh_ and _s_parameters.txt_ be situated in the working directory. In the _s_parameters.txt_, it is paramount that the *SAUVEGARDE* argument remains untouched as it is used by the _sauvegarde.sh_ script to create backups. This homemade backup method was introduced to cope with servers instability and walltimes in the case of shared clusters. It allows one to relaunch simulations from the last existing backup instead of starting from zero when said simulations have been halted before equilibrium was reached.
+
+In the _s_parameters.txt_ file, the first line indicates the order in which parameters must be given. the `*` at the beginning of a line indicates to the program that said line is a parameter set. The meaning of each parameter is as follows:
+* `N`: size of the simulated population. 
+* `Ng`: number of generations for which the simulation will be running.
+* `step_mes`: time interval between two writings in the output file (in number of generations). Note that the smaller this number, the longer the simulation will take because appending an external file takes time.
+* `a`: selfing rate (α)
+* `sig`: proportion of selfing imperatively occuring within the same section (σ) when selfing occurs.
+* `s`: selection coefficient weighing on deleterious mutations at selected loci.
+* `h`: dominance coefficient of deleterious mutations at selected loci.
+* `c`: cost of replication fidelity.
+* `t`: type of replication fidelity function (see _functions.cpp_ file for details). t=2 was used throughout the present study.
+* `E`: life expectancy of the modelled plants. 
+* `L`: length of the genetic map in cM (controls the number of crossing-overs occuring per meiosis).
+* `init_u`: initial mutation rate at the beginning of the simulation.
+* `u`: mutation rate at the modifier.
+* `step_u`: size of the interval in which mutations can occur at the modifier. This parameter controls how far a mutation can lend from its ancestral value.
+* `trigger_u`: number of generations before mutation rate evolution starts. This can be set to zero without affecting the results.
+* `gt`: controls the type of relationship between meiotic and somatic mutation rates. Type 1 (linear) was used throughout the present study. 
+* `gga`: Relative mutagenicity of meiosis and somatic growth (γ).
+* `ggb`: this parameter is only useful when gt != 1, it was not considered in this study.
+* `sg`: must be set as _SAUVEGARDE_
+* `it`: number of iterations the program should do (typically one per launch when using clusters because of walltimes).
+
+
+If readers need any explanation regarding the programs and notebooks presented in this repository, they can e-mail me at: *thomaslesaffre.evolbiol@gmail.com*
