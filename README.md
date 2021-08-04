@@ -28,7 +28,7 @@ The program has to be compiled using -std=c++11 and was written on an Ubuntu 16.
 * _s_parameters.txt_ is a template for the parameters input file.
 * _sauvegarde.sh_ is a shell script called upon in the C++ program to manage back-ups during simulations. It should always be in the same folder as the executable file.
 
-In addition, the raw output of the simulation program which was used to produce the results presented in the main text are given in the compressed folder _data.tar.gz_ .
+In addition, the raw output of the simulation program which was used to produce the results presented in the main text and the appendices are given in the compressed folder _data.tar.gz_.
 
 _Compiling the program_
 
