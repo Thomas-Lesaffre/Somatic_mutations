@@ -28,7 +28,9 @@ The program has to be compiled using -std=c++11 and was written on an Ubuntu 16.
 * _s_parameters.txt_ is a template for the parameters input file.
 * _sauvegarde.sh_ is a shell script called upon in the C++ program to manage back-ups during simulations. It should always be in the same folder as the executable file.
 
-In addition, the raw output of the simulation program which was used to produce the results presented in the main text and the appendices are given in the compressed folder _raw_data.tar.gz_. A dataset summarising the results is also provided. This is the dataset that was used to produce all the plots presented in the paper using R. One may notice that a few files are missing from the _sigma1_ folder (11 files out of 450). This is due to technical difficulties encountered while using clusters, which resulted in the loss of a small number of output files. Since their absence is of no consequence to the conclusions of the study and clusters availability was very limited when simulations were conducted, I chose to not run them again.
+In addition, the raw output of the simulation program which was used to produce the results presented in the main text and the appendices are given in the compressed folder _raw_data.tar.gz_.  One may notice that a few files are missing from the _data/data_appendix/sigma1/_ folder (11 files out of 450). This is due to technical difficulties encountered while using clusters, which resulted in the loss of these files. Since their absence is of no consequence to the conclusions of the study and clusters availability was very limited when simulations were conducted, I chose to not run them again.
+
+A dataset summarising the results is also provided (_summarised_data.txt_). This is the dataset that was used to produce all the plots presented in the paper using R.
 
 _Compiling the program_
 
