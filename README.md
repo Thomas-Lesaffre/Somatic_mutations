@@ -3,6 +3,12 @@
 This repository contains the simulation program used in the study "Population-level consequences of inheritable somatic mutations 
 and the evolution of mutation rates in plants", accepted for publication in the _Proceedings of the Royal Society B: Biological Science_.
 
+The Zenodo DOI associated with this program is 
+
+[![DOI](https://zenodo.org/badge/299606250.svg)](https://zenodo.org/badge/latestdoi/299606250)
+
+
+
 _Abstract_
 
 Inbreeding depression, that is the decrease in fitness of inbred relative to outbred individuals, was shown to increase strongly as life expectancy increases 
