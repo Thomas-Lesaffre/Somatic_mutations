@@ -62,6 +62,6 @@ In the _s_parameters.txt_ file, the first line indicates the order in which para
 * `sg`: must be set as _SAUVEGARDE_
 * `it`: number of iterations the program should do (typically one per launch when using clusters because of walltimes).
 
-Once the parameters have been entered  _s_parameters.txt_ file and the working directory is set as described above, one can launch the simulation by from the working directory with `nohup ./path_to_exec/somatic >/dev/null/ &`.
+Once the parameters have been entered  _s_parameters.txt_ file and the working directory is set as described above, one can launch the simulation by from the working directory with `nohup ./path_to_exec/somatic >/dev/null &`.
 
 If readers need any explanation regarding the programs and notebooks presented in this repository, they can e-mail me at: *thomaslesaffre.evolbiol@gmail.com*
